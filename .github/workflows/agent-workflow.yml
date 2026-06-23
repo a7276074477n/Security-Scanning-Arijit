@@ -34,21 +34,21 @@ jobs:
       id: sonar-scan
       run: |
         mvn -B verify sonar:sonar \
-          -Dsonar.projectKey=testtraininggs_testtraininggs \
-          -Dsonar.organization=testtraininggs \
+          -Dsonar.projectKey=trainiingsample_trainiingsample \
+          -Dsonar.organization=trainiingsample \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.token=$SONAR_TOKEN
         
         # Download SonarCloud results
         sleep 30
         curl -u "$SONAR_TOKEN:" \
-          "https://sonarcloud.io/api/issues/search?componentKeys=testtraininggs_testtraininggs&resolved=false" \
+          "https://sonarcloud.io/api/issues/search?componentKeys=trainiingsample_trainiingsample&resolved=false" \
           -o sonar-results.json || echo '{"issues":[]}' > sonar-results.json
         
         echo "report-path=sonar-results.json" >> $GITHUB_OUTPUT
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}k
     
     - name: Upload SonarQube Results
       uses: actions/upload-artifact@v4
@@ -96,7 +96,7 @@ jobs:
         id: zap-scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://testphp.vulnweb.com/'
+          target: 'https://juice-shop.github.io/'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a -J zap-report.json'
       
@@ -268,7 +268,7 @@ jobs:
                               "tool": "SonarQube",
                               "severity": issue.get('severity', 'UNKNOWN'),
                               "vulnerability": issue.get('rule', 'Unknown Rule'),
-                              "file": issue.get('component', '').replace('testtraining_testtraining:', ''),
+                              "file": issue.get('component', '').replace('trainiingsample_trainiingsample:', ''),
                               "line": issue.get('line', 0),
                               "description": issue.get('message', '')[:200]
                           })
